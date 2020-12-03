@@ -1,6 +1,7 @@
 from flask import Flask, request
 import telegram
 from telebot.credentials import bot_token, bot_user_name,URL
+from datetime import datetime
 
 global bot
 global TOKEN
@@ -11,6 +12,7 @@ app = Flask(__name__)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
+   __write_log("even received")
    # retrieve the message in JSON and then transform it to Telegram object
    update = telegram.Update.de_json(request.get_json(force=True), bot)
 
@@ -51,6 +53,12 @@ def set_webhook():
 @app.route('/')
 def index():
    return '.'
+
+def __write_log(msg):
+    file = open('logs.txt', 'w+')
+    log = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " - " + msg
+    file.write(msg)
+    file.close()
 
 
 if __name__ == '__main__':
