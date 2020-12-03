@@ -19,13 +19,13 @@ def respond():
 
    # Telegram understands UTF-8, so encode text for unicode compatibility
    text = update.message.text.encode('utf-8').decode()
-   # for debugging purposes only
-   print("got text message :", text)
-   # the first time you chat with the bot AKA the welcoming message
+   # Welcome message
    if text == "/start":
        # print the welcoming message
        bot_welcome = """
-       Hallo ihr Säcke!
+       Ho! Ho! Ho!
+       Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du teilnehmen möchtest dann sende /join !
+       Ho! Ho! Ho!
        """
        # send the welcoming message
        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
@@ -33,13 +33,10 @@ def respond():
 
    else:
        try:
-           # clear the message we got from any non alphabets
-           text = re.sub(r"W", "_", text)
-           # note that you can send photos by url and telegram will fetch it for you
-           bot.sendPhoto(chat_id=chat_id, photo=url, reply_to_message_id=msg_id)
+           bot.sendMessage(chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
        except Exception:
            # if things went wrong
-           bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
+           bot.sendMessage(chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
 
    return 'ok'
 
