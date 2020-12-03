@@ -12,12 +12,13 @@ app = Flask(__name__)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
-   __write_log("even received")
    # retrieve the message in JSON and then transform it to Telegram object
    update = telegram.Update.de_json(request.get_json(force=True), bot)
 
    chat_id = update.message.chat.id
    msg_id = update.message.message_id
+
+   __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
    # Telegram understands UTF-8, so encode text for unicode compatibility
    text = update.message.text.encode('utf-8').decode()
@@ -56,8 +57,8 @@ def index():
 
 def __write_log(msg):
     file = open('logs.txt', 'w+')
-    log = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " - " + msg
-    file.write(msg)
+    log = "\n" + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " - " + msg
+    file.write(log)
     file.close()
 
 
