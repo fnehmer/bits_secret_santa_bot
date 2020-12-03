@@ -51,9 +51,6 @@ def set_webhook():
    else:
        return "webhook setup failed"
 
-@app.route('/')
-def index():
-   return '.'
 
 def __write_log(msg):
     file = open('logs.txt', 'w+')
