@@ -61,10 +61,10 @@ def __write_log(msg):
     file.close()
 
 
-def __add_user(name, isAdmin):
+def __add_user(name, isAdmin, groupId):
     global users
     dict_users = json.loads(users)
-    dict_users["users"].append(dict({"name": name, 'isAdmin': isAdmin}))
+    dict_users["users"].append(dict({"name": name, 'isAdmin': isAdmin, 'groupId': groupId}))
     users = json.dumps(dict_users, indent=4)  
 
 
