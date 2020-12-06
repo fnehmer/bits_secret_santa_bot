@@ -1,3 +1,6 @@
+### deploy ###
+deploy_app.sh
+
 ### Flask ###
 instance/*
 !instance/.gitignore
