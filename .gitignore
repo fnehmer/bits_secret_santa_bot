@@ -415,3 +415,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+# Ignore jetbrain
+.idea/
