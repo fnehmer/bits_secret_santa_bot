@@ -23,6 +23,8 @@ import os
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
+from models.telegram_user import TelegramUser
+
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=log_format, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,6 +55,8 @@ def help_command(update, context):
 
 def repeat(update, context):
     update.message.reply_text(update.message.text)
+    telegram_user = TelegramUser.from_telegram_user_object(update.message.from_user)
+    print(telegram_user.to_dict())
 
 
 def main():
