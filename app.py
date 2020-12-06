@@ -2,9 +2,11 @@ from flask import Flask, request
 import telegram
 from telebot.credentials import bot_token, bot_user_name,URL
 from datetime import datetime
+import json
 
 global bot
 global TOKEN
+users = json.dumps(dict({'users': []}), indent=4)
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
@@ -57,6 +59,13 @@ def __write_log(msg):
     log = "\n" + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " - " + msg
     file.write(log)
     file.close()
+
+
+def __add_user(name, isAdmin):
+    global users
+    dict_users = json.loads(users)
+    dict_users["users"].append(dict({"name": name, 'isAdmin': isAdmin}))
+    users = json.dumps(dict_users, indent=4)  
 
 
 if __name__ == '__main__':
