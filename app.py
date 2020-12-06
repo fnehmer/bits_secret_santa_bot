@@ -55,7 +55,12 @@ def set_webhook():
 
 
 def __write_log(msg):
-    file = open('logs.txt', 'w+')
+    filename = 'logs.txt'
+    if os.path.exists(filename):
+        file_mode = 'a'
+    else:
+        file_mode = 'w+'
+    file = open(filename, file_mode)
     log = "\n" + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " - " + msg
     file.write(log)
     file.close()
