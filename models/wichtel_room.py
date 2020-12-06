@@ -1,7 +1,7 @@
 class WichtelRoom:
     def __init__(self, code):
         self.code = code
-        self.members = []
+        self.telegram_users = []
 
     def from_dict(self, dict):
         return WichtelRoom(
@@ -11,5 +11,5 @@ class WichtelRoom:
     def to_dict(self):
         return {
             'code': self.code,
-            'member': self.members
+            'telegram_users': self.telegram_users
         }
