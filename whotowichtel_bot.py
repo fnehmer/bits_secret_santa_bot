@@ -31,10 +31,13 @@ logger = logging.getLogger(__name__)
 
 # Settings
 bot_token = os.getenv('WHOTOWICHTEL_BOT_TOKEN', '')
+wichtel_service = None
 
 
 def start_command(update, context):
-    update.message.reply_text('Hi!')
+    telegram_user = TelegramUser.from_telegram_user_object(update.message.from_user)
+    reply = "Ho Ho Ho {}".format(telegram_user.first_name)
+    update.message.reply_text(reply)
 
 
 def create_command(update, context):
