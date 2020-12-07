@@ -5,11 +5,14 @@ from datetime import datetime
 import json
 import os
 from wichtel_service import WichtelService
+import string
+import random
 
 
 global bot
 global TOKEN
 users = json.dumps(dict({'users': []}), indent=4)
+group_codes = []
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 secret_santa_service = WichtelService()
@@ -19,26 +22,30 @@ app = Flask(__name__)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
-    # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
-    print(update.message)
     chat_id = update.message.chat.id
     msg_id = update.message.message_id
 
     __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
-    # Telegram understands UTF-8, so encode text for unicode compatibility
     text = update.message.text.encode('utf-8').decode()
+
     # Welcome message
     if text == "/start":
-        # print the welcoming message
-        bot_welcome = """
-        Ho! Ho! Ho!
-        Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du teilnehmen möchtest dann sende /join!
-        """
-        # send the welcoming message
+        print(update)
+        group_code = __get_random_string(6)
+        while group_code in group_codes:
+            group_code = __get_random_string(6)
+        bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Euer Gruppen Code ist '" + \
+            group_code + "'" + "\n" + "Bitte sendet mir per Direktnachricht '/join " + \
+            group_code + "', um teilzunehmen."
+
         bot.sendMessage(chat_id=chat_id, text=bot_welcome,
                         reply_to_message_id=msg_id)
+
+    # Join group
+    if text.startswith("/join"):
+        msg = "Glückwunsch, du bist der Gruppe beigetreten"
 
     else:
         try:
@@ -81,6 +88,12 @@ def __add_user(name, isAdmin, groupId):
     dict_users["users"].append(
         dict({"name": name, 'isAdmin': isAdmin, 'groupId': groupId}))
     users = json.dumps(dict_users, indent=4)
+
+
+def __get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
 
 
 if __name__ == '__main__':
