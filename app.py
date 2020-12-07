@@ -70,6 +70,8 @@ def respond():
                     shuffle_users.append(user)
             
             if len(shuffle_users) < 1:
+                bot.sendMessage(
+                    chat_id=chat_id, text="users: " + str(shuffle_users) + "group id: " + groupId)
                 return 'ok'
             
             user_relations = []
