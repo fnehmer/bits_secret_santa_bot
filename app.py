@@ -83,7 +83,7 @@ def respond():
                 return 'ok'
 
             if groupId not in group_codes:
-                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(group_id) + " gefunden.", reply_to_message_id=msg_id)
+                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(groupId) + " gefunden.", reply_to_message_id=msg_id)
                 return "ok"  
 
             for user in users:
