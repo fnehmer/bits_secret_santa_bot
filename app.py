@@ -128,6 +128,16 @@ def set_webhook():
         return "webhook setup failed"
 
 
+@app.route('/unset_webhook', methods=['GET', 'POST'])
+def unset_webhook():
+    s = bot.deleteWebhook()
+    if s:
+        return "webhook deletion ok"
+    else:
+        return "webhook deletion failed"
+
+
+
 def __write_log(msg):
     filename = 'logs.txt'
     if os.path.exists(filename):
