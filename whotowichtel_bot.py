@@ -24,6 +24,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
 from models.telegram_user import TelegramUser
+from models.wichtel_room import WichtelRoom
+from util import get_random_string
+from wichtel_service import WichtelService
 
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=log_format, level=logging.INFO)
@@ -31,7 +34,8 @@ logger = logging.getLogger(__name__)
 
 # Settings
 bot_token = os.getenv('WHOTOWICHTEL_BOT_TOKEN', '')
-wichtel_service = None
+wichtel_service = WichtelService()
+wichtel_service.load_state()
 
 
 def start_command(update, context):
@@ -41,13 +45,36 @@ def start_command(update, context):
 
 
 def create_command(update, context):
-    reply = 'You created a group... not. At this point a room code will be returned.'
+    code = get_random_string(6)
+    telegram_user = TelegramUser.from_telegram_user_object(update.message.from_user)
+
+    reply = 'Your group has been created. Use this token to invite your friends:\n%s\n' % code
+    wichtel_room = WichtelRoom(
+        code=code,
+        admin_user=telegram_user,
+        telegram_users=[]
+    )
+
+    wichtel_service.wichtel_rooms.append(wichtel_room)
+    wichtel_service.save_state()
     update.message.reply_text(reply)
 
 
 def join_command(update, context):
-    reply = 'You joined a room... not. Usually, you will be asked for an existing room code.'
-    update.message.reply_text(reply)
+    if not context.args:
+        reply = 'Please enter the code wichtel-room you would like to join like that:\n\n /join <code>'
+        update.message.reply_text(reply)
+        return
+
+    code = context.args[0]
+    telegram_user = TelegramUser.from_telegram_user_object(update.message.from_user)
+    wichtel_room = wichtel_service.add_user_to_group(telegram_user, code)
+    if wichtel_room:
+        reply = 'You joined the Wichtel-Group of {}!'.format(wichtel_room.admin_user.first_name)
+        update.message.reply_text(reply)
+    else:
+        reply = 'Code "{}" seems to be invalid! :('.format(code)
+        update.message.reply_text(reply)
 
 
 def help_command(update, context):
@@ -59,7 +86,6 @@ def help_command(update, context):
 def repeat(update, context):
     update.message.reply_text(update.message.text)
     telegram_user = TelegramUser.from_telegram_user_object(update.message.from_user)
-    print(telegram_user.to_dict())
 
 
 def main():

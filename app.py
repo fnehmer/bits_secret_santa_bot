@@ -4,6 +4,7 @@ from telebot.credentials import bot_token, bot_user_name, URL
 from datetime import datetime
 import json
 import os
+from wichtel_service import WichtelService
 
 
 global bot
@@ -11,6 +12,7 @@ global TOKEN
 users = json.dumps(dict({'users': []}), indent=4)
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
+secret_santa_service = WichtelService()
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ app = Flask(__name__)
 def respond():
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
+    print(update.message)
     chat_id = update.message.chat.id
     msg_id = update.message.message_id
 
