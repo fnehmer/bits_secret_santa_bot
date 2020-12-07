@@ -28,71 +28,76 @@ def respond():
 
     __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
-    text = update.message.text.encode('utf-8').decode()
+    if hasattr(update, "message"):
 
-    # Welcome message
-    if text == "/start":
-        group_code = __get_random_string(6)
-        while group_code in group_codes:
+        text = update.message.text.encode('utf-8').decode()
+
+        # Welcome message
+        if text == "/start":
             group_code = __get_random_string(6)
-        bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Euer Gruppen Code ist '" + \
-            group_code + "'" + "\n" + "Bitte sendet mir per Direktnachricht '/join " + \
-            group_code + "', um teilzunehmen."
+            while group_code in group_codes:
+                group_code = __get_random_string(6)
+            bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Euer Gruppen Code ist '" + \
+                group_code + "'" + "\n" + "Bitte sendet mir per Direktnachricht '/join " + \
+                group_code + "', um teilzunehmen."
 
-        bot.sendMessage(chat_id=chat_id, text=bot_welcome,
-                        reply_to_message_id=msg_id)
+            bot.sendMessage(chat_id=chat_id, text=bot_welcome,
+                            reply_to_message_id=msg_id)
 
-        bot.sendMessage(chat_id=chat_id, text=str(update.message),
-                        reply_to_message_id=msg_id)
+            bot.sendMessage(chat_id=chat_id, text=str(update.message),
+                            reply_to_message_id=msg_id)
 
-    # Join group
-    elif text.startswith("/join"):
-        if update.message.chat.type == "private":
-            gc = text.strip()[6:]
-            __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
-            msg = "Willkommen in der Gruppe!"
-            bot.sendMessage(chat_id=chat_id, text=msg)
+        # Join group
+        elif text.startswith("/join"):
+            if update.message.chat.type == "private":
+                gc = text.strip()[6:]
+                __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
+                msg = "Willkommen in der Gruppe!"
+                bot.sendMessage(chat_id=chat_id, text=msg)
+            else:
+                bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
+            bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
+        
+        elif text == ("/users"):
+            bot.sendMessage(chat_id=chat_id, text=users)
+
+        elif text.startswith("/shuffle"):
+            group_name = text.strip()[9:]
+            print("group: " + str(group_name))
+            shuffle_users = []
+            dict_users = json.loads(users)
+            print("dict_users: " + str(dict_users))
+
+            for user in dict_users["users"]:
+                if user == group_name:
+                    shuffle_users.append(user)
+            
+            user_relations = []
+            d20_random = len(users)
+
+            while(d20_random % len(users) == 0):
+                d20_random = random.randrange(19)+1
+
+            for i in range(len(users)):
+                partner_index = (i+d20_random)%len(users)
+                user_relations.append((users[i], users[partner_index]))
+            
+            for relation in user_relations:
+                bot.sendMessage(chat_id=chat_id, text="Du darfts " + relation[1].name + " beschenken!")
+
+    
+        
+
         else:
-            bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
-        bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
-    
-    elif text == ("/users"):
-        bot.sendMessage(chat_id=chat_id, text=users)
+            try:
+                bot.sendMessage(
+                    chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
+            except Exception:
+                # if things went wrong
+                bot.sendMessage(
+                    chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
 
-    elif text.startswith("/shuffle"):
-        group_name = text.strip()[9:]
-        shuffle_users = []
-
-        for user in json.loads(users)[users]:
-            if user == group_name:
-                shuffle_users.append(user)
-        
-        user_relations = []
-        d20_random = len(users)
-
-        while(d20_random % len(users) == 0):
-            d20_random = random.randrange(19)+1
-
-        for i in range(len(users)):
-            partner_index = (i+d20_random)%len(users)
-            user_relations.append((users[i], users[partner_index]))
-        
-        for relation in user_relations:
-            bot.sendMessage(chat_id=chat_id, text="Du darfts " + relation[1].name + " beschenken!")
-
-   
-    
-
-    else:
-        try:
-            bot.sendMessage(
-                chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
-        except Exception:
-            # if things went wrong
-            bot.sendMessage(
-                chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
-
-    return 'ok'
+        return 'ok'
 
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
