@@ -32,7 +32,6 @@ def respond():
 
     # Welcome message
     if text == "/start":
-        print(update)
         group_code = __get_random_string(6)
         while group_code in group_codes:
             group_code = __get_random_string(6)
@@ -43,8 +42,11 @@ def respond():
         bot.sendMessage(chat_id=chat_id, text=bot_welcome,
                         reply_to_message_id=msg_id)
 
+        bot.sendMessage(chat_id=chat_id, text=str(update.message),
+                        reply_to_message_id=msg_id)
+
     # Join group
-    if text.startswith("/join"):
+    elif text.startswith("/join"):
         msg = "Glückwunsch, du bist der Gruppe beigetreten"
 
     else:
