@@ -14,8 +14,6 @@ users = []
 group_codes = []
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
-secret_santa_service = WichtelService()
-
 app = Flask(__name__)
 
 
@@ -31,47 +29,57 @@ def respond():
 
         text = update.message.text.encode('utf-8').decode()
 
-        # Welcome message
+# WELCOME MESSAGE
         if text == "/start":
+            bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du eine neue Ziehung beginnen willst dann sende /init !"
+            bot.sendMessage(chat_id=chat_id, text=bot_welcome,reply_to_message_id=msg_id)
+
+# INIT DRAWING
+        elif text.startswith("/init"):
             group_code = __get_random_string(6)
             while group_code in group_codes:
                 group_code = __get_random_string(6)
-            bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Euer Gruppen Code ist '" + \
-                group_code + "'" + "\n" + "Bitte sendet mir per Direktnachricht '/join " + \
-                group_code + "', um teilzunehmen."
+            group_codes.append(group_code)
+            init_msg="Eure Gruppennummer ist " + group_code + ". Bitte sendet /join " + group_code + " wenn ihr teilnehmen wollt."
+            bot.sendMessage(chat_id=chat_id, text=init_msg, reply_to_message_id=msg_id)
 
-            bot.sendMessage(chat_id=chat_id, text=bot_welcome,
-                            reply_to_message_id=msg_id)
-
-            bot.sendMessage(chat_id=chat_id, text=str(update.message),
-                            reply_to_message_id=msg_id)
-
-        # Join group
+# JOIN GROUP
         elif text.startswith("/join"):
-            if update.message.chat.type == "private":
-                gc = text.strip()[6:]
-                __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
-                msg = "Willkommen in der Gruppe!"
-                bot.sendMessage(chat_id=chat_id, text=msg)
-            else:
-                bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
-            bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
-        
+            gc = text.strip()[6:]
+            if len(gc) < 1:
+                bot.sendMessage(chat_id=chat_id, text="Bitte vergiss nicht den Gruppencode beim /join <Gruppencode> Kommando!", reply_to_message_id=msg_id)
+                return "ok"
+            
+            for user in users:
+                if user['uid'] == update.effective_user.id and gc == user["groupId"]:
+                    bot.sendMessage(chat_id=chat_id, text="Du bist bereits in der Gruppe, " + str(update.effective_user.first_name), reply_to_message_id=msg_id)
+                    return "ok"
+
+            __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
+            msg = "Willkommen in der Gruppe, " + str(update.effective_user.first_name) + "!"
+            bot.sendMessage(chat_id=chat_id, text=msg)
+
+
+# SHOW PARTICIPATING USERS
         elif text == ("/users"):
             bot.sendMessage(chat_id=chat_id, text=users)
+
 
 # SHUFFLE
         elif text.startswith("/shuffle"):
             groupId = text.strip()[9:]
             shuffle_users = []
 
+            if len(groupId)<1:
+                bot.sendMessage(chat_id=chat_id, text="Bitte gebe auch eine Gruppen Id ein!", reply_to_message_id=msg_id)
+                return 'ok'
+
             for user in users:
                 if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
             if len(shuffle_users) < 2:
-                bot.sendMessage(
-                    chat_id=chat_id, text="users: " + str(shuffle_users) + "group id: " + groupId)
+                bot.sendMessage(chat_id=chat_id, text="Es nehmen aktuell weniger als 2 Leute teil!", reply_to_message_id=msg_id)
                 return 'ok'
             
             user_relations = []
@@ -84,19 +92,13 @@ def respond():
                 partner_index = (i+d20_random)%len(shuffle_users)
                 user_relations.append((shuffle_users[i], shuffle_users[partner_index]))
 
+            __write_log(str(user_relations))
+
             for pair in user_relations:
-                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Send to: " + str(pair[1]['name']))      
-
+                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + "beschenken!")
         else:
-            try:
-                bot.sendMessage(
-                    chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
-            except Exception:
-                # if things went wrong
-                bot.sendMessage(
-                    chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
+            return "ok"
     return 'ok'
-
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
