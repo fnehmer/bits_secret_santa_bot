@@ -103,6 +103,8 @@ def respond():
 
             for pair in user_relations:
                 bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + " beschenken!")
+            bot.sendMessage(chat_id=chat_id, text="Die Auslosung ist abgeschlossen. Alle Teilnehmer sollten eine Nachraicht erhalten haben.")
+
         else:
             return "ok"
     return 'ok'
