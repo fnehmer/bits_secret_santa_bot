@@ -83,7 +83,7 @@ def respond():
                 user_relations.append((users[i], users[partner_index]))
             
             for relation in user_relations:
-                bot.sendMessage(chat_id=chat_id, text="Du darfts " + relation[1].name + " beschenken!")
+                bot.sendMessage(chat_id=chat_id, text="Du darfts " + relation[1]["name"] + " beschenken!")
 
     
         
