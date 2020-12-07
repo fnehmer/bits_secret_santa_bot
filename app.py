@@ -40,7 +40,7 @@ def respond():
             while group_code in group_codes:
                 group_code = __get_random_string(6)
             group_codes.append(group_code)
-            init_msg="Euer Gruppencode ist " + group_code + ". Bitte sendet /join " + group_code + " wenn ihr teilnehmen wollt."
+            init_msg="Euer Gruppencode ist " + group_code + ". Bitte sendet mir privat (@BitsSecretSantaBot) das Kommando /join " + group_code + " wenn ihr teilnehmen wollt."
             bot.sendMessage(chat_id=chat_id, text=init_msg, reply_to_message_id=msg_id)
 
 # JOIN GROUP
@@ -63,9 +63,9 @@ def respond():
                     bot.sendMessage(chat_id=chat_id, text="Du bist bereits in der Gruppe, " + str(update.effective_user.first_name) + "!", reply_to_message_id=msg_id)
                     return "ok"
 
-            __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
-            msg = "Willkommen in der Gruppe, " + str(update.effective_user.first_name) + "!"
-            bot.sendMessage(chat_id=chat_id, text=msg)
+                __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
+                msg = "Willkommen in der Gruppe, " + str(update.effective_user.first_name) + "!"
+                bot.sendMessage(chat_id=chat_id, text=msg)
 
 
 # SHOW PARTICIPATING USERS
