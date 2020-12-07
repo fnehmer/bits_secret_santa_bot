@@ -63,8 +63,8 @@ def respond():
         group_name = text.strip()[9:]
         shuffle_users = []
 
-        for user in json.loads(users):
-            if user["groupId"] == group_name:
+        for user in json.loads(users)[users]:
+            if user == group_name:
                 shuffle_users.append(user)
         
         user_relations = []
