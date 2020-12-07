@@ -69,7 +69,7 @@ def respond():
                 if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
-            if shuffle_users < 1
+            if len(shuffle_users) < 1:
                 return 'ok'
             
             user_relations = []
