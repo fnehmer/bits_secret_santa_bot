@@ -69,23 +69,23 @@ def respond():
                 if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
-            if len(shuffle_users) < 1:
+            if len(shuffle_users) < 2:
                 bot.sendMessage(
                     chat_id=chat_id, text="users: " + str(shuffle_users) + "group id: " + groupId)
                 return 'ok'
             
-                user_relations = []
-                d20_random = len(shuffle_users)
+            user_relations = []
+            d20_random = len(shuffle_users)
 
-                while(d20_random % len(shuffle_users) == 0):
-                    d20_random = random.randrange(19)+1
+            while(d20_random % len(shuffle_users) == 0):
+                d20_random = random.randrange(19)+1
 
-                for i in range(len(shuffle_users)):
-                    partner_index = (i+d20_random)%len(shuffle_users)
-                    user_relations.append((shuffle_users[i], shuffle_users[partner_index]))
+            for i in range(len(shuffle_users)):
+                partner_index = (i+d20_random)%len(shuffle_users)
+                user_relations.append((shuffle_users[i], shuffle_users[partner_index]))
 
-                for pair in user_relations:
-                    bot.sendMessage(chat_id=str(pair[0].uid), text="Send to: " + str(pair[1].name))      
+            for pair in user_relations:
+                bot.sendMessage(chat_id=str(pair[0].uid), text="Send to: " + str(pair[1].name))      
 
         else:
             try:
