@@ -96,8 +96,8 @@ def respond():
                 # if things went wrong
                 bot.sendMessage(
                     chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
-
-        return 'ok'
+    print(str(message))
+    return 'ok'
 
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
