@@ -48,7 +48,6 @@ def respond():
             if update.message.chat.type != "private":
                 bot.sendMessage(chat_id=chat_id, text="Bitte sende mir privat, dass du joinen willst! (@BitsSecretSantaBot)", reply_to_message_id=msg_id)
                 return "ok"
-            try:
 
                 gc = text.strip()[6:]
                 if len(gc) < 1:
@@ -58,8 +57,6 @@ def respond():
                 if gc not in group_codes:
                     bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(gc) + " gefunden.", reply_to_message_id=msg_id)
                     return "ok"
-            except:
-                return "ok"
 
             for user in users:
                 if user['uid'] == update.effective_user.id and gc == user["groupId"]:
@@ -86,7 +83,7 @@ def respond():
                 return 'ok'
 
             if groupId not in group_codes:
-                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(gc) + " gefunden.", reply_to_message_id=msg_id)
+                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(group_id) + " gefunden.", reply_to_message_id=msg_id)
                 return "ok"  
 
             for user in users:
