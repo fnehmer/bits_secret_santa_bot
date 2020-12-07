@@ -55,8 +55,31 @@ def respond():
         else:
             bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
         bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
-    elif text.startswith("/users"):
+    
+    elif text == ("/users"):
         bot.sendMessage(chat_id=chat_id, text=users)
+
+    elif text.startswith("/shuffle"):
+        group_name = text.strip()[9:]
+        shuffle_users = []
+
+        for user in json.loads(users):
+            if user["groupId"] == group_name:
+                shuffle_users.append(user)
+        
+        user_relations = []
+        d20_random = len(users)
+
+        while(d20_random % len(users) == 0):
+            d20_random = random.randrange(19)+1
+
+        for i in range(len(users)):
+            partner_index = (i+d20_random)%len(users)
+            user_relations.append((users[i], users[partner_index]))
+        
+        for relation in user_relations:
+            bot.sendMessage(chat_id=chat_id, text="Du darfts " + relation[1].name + " beschenken!")
+
    
     
 
