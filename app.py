@@ -55,7 +55,9 @@ def respond():
         else:
             bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
         bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
-
+    elif text.startswith("/users"):
+        bot.sendMessage(chat_id=chat_id, text=users)
+   
     
 
     else:
