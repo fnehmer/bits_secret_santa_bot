@@ -50,9 +50,13 @@ def respond():
                 bot.sendMessage(chat_id=chat_id, text="Bitte vergiss nicht den Gruppencode beim /join <Gruppencode> Kommando!", reply_to_message_id=msg_id)
                 return "ok"
             
+            if gc not in group_codes:
+                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(gc) + " gefunden.", reply_to_message_id=msg_id)
+                return "ok"    
+
             for user in users:
                 if user['uid'] == update.effective_user.id and gc == user["groupId"]:
-                    bot.sendMessage(chat_id=chat_id, text="Du bist bereits in der Gruppe, " + str(update.effective_user.first_name), reply_to_message_id=msg_id)
+                    bot.sendMessage(chat_id=chat_id, text="Du bist bereits in der Gruppe, " + str(update.effective_user.first_name) + "!", reply_to_message_id=msg_id)
                     return "ok"
 
             __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
@@ -73,6 +77,10 @@ def respond():
             if len(groupId)<1:
                 bot.sendMessage(chat_id=chat_id, text="Bitte gebe auch eine Gruppen Id ein!", reply_to_message_id=msg_id)
                 return 'ok'
+
+            if groupId not in group_codes:
+                bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(gc) + " gefunden.", reply_to_message_id=msg_id)
+                return "ok"  
 
             for user in users:
                 if user["groupId"] == groupId:
