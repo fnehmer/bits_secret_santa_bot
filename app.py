@@ -27,7 +27,7 @@ def respond():
 
     __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
-    if hasattr(update, "message") and hasattr(update.message, "text"):
+    if update.message.text is not None:
 
         text = update.message.text.encode('utf-8').decode()
 
