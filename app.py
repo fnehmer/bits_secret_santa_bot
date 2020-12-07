@@ -85,7 +85,7 @@ def respond():
                 user_relations.append((shuffle_users[i], shuffle_users[partner_index]))
 
             for pair in user_relations:
-                bot.sendMessage(chat_id=str(pair[0].uid), text="Send to: " + str(pair[1].name))      
+                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Send to: " + str(pair[1]['name']))      
 
         else:
             try:
