@@ -47,7 +47,7 @@ def respond():
 
     # Join group
     elif text.startswith("/join"):
-        if update.message.type == "private":
+        if update.message.chat.type == "private":
             gc = text.strip()[6:]
             __add_user(update.effective_user.first_name, False, gc)
             msg = "Willkommen in der Gruppe!"
