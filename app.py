@@ -47,7 +47,16 @@ def respond():
 
     # Join group
     elif text.startswith("/join"):
-        msg = "Glückwunsch, du bist der Gruppe beigetreten"
+        if update.message.type == "private":
+            gc = text.strip()[6:]
+            __add_user(update.effective_user.first_name, False, gc)
+            msg = "Willkommen in der Gruppe!"
+            bot.sendMessage(chat_id=chat_id, text=msg)
+        else:
+            bot.sendMessage(chat_id=chat_id, text="Bitte sende mir deinen Gruppenbeitritt privat!", reply_to_message_id=msg_id)
+        bot.sendMessage(chat_id=chat_id, text=str(update.message), reply_to_message_id=msg_id)
+
+    
 
     else:
         try:
