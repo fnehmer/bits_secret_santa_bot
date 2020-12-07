@@ -82,9 +82,10 @@ def respond():
                 partner_index = (i+d20_random)%len(users)
                 user_relations.append((users[i], users[partner_index]))
             
-            for relation in user_relations:
-                send_user = json.loads(relation[1].replace("'", "\""))
-                bot.sendMessage(chat_id=chat_id, text="Du darfts " + send_user["name"] + " beschenken!")
+            bot.sendMessage(chat_id=chat_id, text=str(user_relations))
+            # for relation in user_relations:
+            #     send_user = json.loads(relation[1].replace("'", "\""))
+            #     bot.sendMessage(chat_id=chat_id, text="Du darfts " + send_user["name"] + " beschenken!")
 
     
         
