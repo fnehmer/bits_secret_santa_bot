@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import string
 import random
+import time
 
 
 global bot
@@ -102,8 +103,12 @@ def respond():
             __write_log(str(user_relations))
 
             for pair in user_relations:
-                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + " beschenken!")
-            bot.sendMessage(chat_id=chat_id, text="Die Auslosung ist abgeschlossen. Alle Teilnehmer sollten eine Nachraicht erhalten haben.")
+                time.sleep(0.5)
+                try:
+                    bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + " beschenken!")
+                except telegram.TelegramError:
+                    bot.sendMessage(chat_id=chat_id, text=str(pair[0]["name"]) + " konnte nicht angeschrieben werden.")
+            bot.sendMessage(chat_id=chat_id, text="Die Auslosung ist abgeschlossen. Alle Teilnehmer sollten eine Nachricht erhalten haben.")
 
         else:
             return "ok"
