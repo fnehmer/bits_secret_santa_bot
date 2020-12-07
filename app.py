@@ -3,7 +3,6 @@ import telegram
 from telebot.credentials import bot_token, bot_user_name, URL
 from datetime import datetime
 import os
-from wichtel_service import WichtelService
 import string
 import random
 
@@ -40,7 +39,7 @@ def respond():
             while group_code in group_codes:
                 group_code = __get_random_string(6)
             group_codes.append(group_code)
-            init_msg="Eure Gruppennummer ist " + group_code + ". Bitte sendet /join " + group_code + " wenn ihr teilnehmen wollt."
+            init_msg="Euer Gruppencode ist " + group_code + ". Bitte sendet /join " + group_code + " wenn ihr teilnehmen wollt."
             bot.sendMessage(chat_id=chat_id, text=init_msg, reply_to_message_id=msg_id)
 
 # JOIN GROUP
@@ -103,7 +102,7 @@ def respond():
             __write_log(str(user_relations))
 
             for pair in user_relations:
-                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + "beschenken!")
+                bot.sendMessage(chat_id=str(pair[0]['uid']), text="Die Auslosung ist abgeschlossen. Der D20 ist gerollt! Du darfst " + str(pair[1]['name']) + " beschenken!")
         else:
             return "ok"
     return 'ok'
