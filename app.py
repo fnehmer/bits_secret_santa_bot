@@ -28,7 +28,7 @@ def respond():
 
     __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
-    if hasattr(update, "message"):
+    if hasattr(update, "message") and hasattr(update.message, "text"):
 
         text = update.message.text.encode('utf-8').decode()
 
@@ -83,7 +83,7 @@ def respond():
                 user_relations.append((users[i], users[partner_index]))
             
             for relation in user_relations:
-                send_user = json.loads(relation[1])
+                send_user = json.loads(relation[1].replace("'", "\""))
                 bot.sendMessage(chat_id=chat_id, text="Du darfts " + send_user["name"] + " beschenken!")
 
     
@@ -97,7 +97,6 @@ def respond():
                 # if things went wrong
                 bot.sendMessage(
                     chat_id=chat_id, text="I received your message", reply_to_message_id=msg_id)
-    print(str(message))
     return 'ok'
 
 
