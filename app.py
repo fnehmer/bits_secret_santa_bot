@@ -60,12 +60,13 @@ def respond():
         elif text == ("/users"):
             bot.sendMessage(chat_id=chat_id, text=users)
 
+# SHUFFLE
         elif text.startswith("/shuffle"):
             groupId = text.strip()[9:]
             shuffle_users = []
 
             for user in users:
-                if user.groupId == groupId:
+                if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
             user_relations = []
