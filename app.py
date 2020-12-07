@@ -2,7 +2,6 @@ from flask import Flask, request
 import telegram
 from telebot.credentials import bot_token, bot_user_name, URL
 from datetime import datetime
-import json
 import os
 from wichtel_service import WichtelService
 import string
@@ -11,7 +10,7 @@ import random
 
 global bot
 global TOKEN
-users = json.dumps(dict({'users': []}), indent=4)
+users = []
 group_codes = []
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
@@ -62,33 +61,25 @@ def respond():
             bot.sendMessage(chat_id=chat_id, text=users)
 
         elif text.startswith("/shuffle"):
-            group_name = text.strip()[9:]
-            print("group: " + str(group_name))
+            groupId = text.strip()[9:]
             shuffle_users = []
-            dict_users = json.loads(users)
-            print("dict_users: " + str(dict_users))
 
-            for user in dict_users["users"]:
-                if user == group_name:
+            for user in users:
+                if user.groupId == groupId:
                     shuffle_users.append(user)
             
             user_relations = []
-            d20_random = len(users)
+            d20_random = len(shuffle_users)
 
-            while(d20_random % len(users) == 0):
+            while(d20_random % len(shuffle_users) == 0):
                 d20_random = random.randrange(19)+1
 
-            for i in range(len(users)):
-                partner_index = (i+d20_random)%len(users)
-                user_relations.append((users[i], users[partner_index]))
-            
-            bot.sendMessage(chat_id=chat_id, text=str(user_relations))
-            # for relation in user_relations:
-            #     send_user = json.loads(relation[1].replace("'", "\""))
-            #     bot.sendMessage(chat_id=chat_id, text="Du darfts " + send_user["name"] + " beschenken!")
+            for i in range(len(shuffle_users)):
+                partner_index = (i+d20_random)%len(shuffle_users)
+                user_relations.append((shuffle_users[i], shuffle_users[partner_index]))
 
-    
-        
+            for pair in user_relations:
+                bot.sendMessage(chat_id=str(pair[0].uid), text="Send to: " + str(pair[1].name))      
 
         else:
             try:
@@ -126,10 +117,7 @@ def __write_log(msg):
 
 def __add_user(uid, name, isAdmin, groupId):
     global users
-    dict_users = json.loads(users)
-    dict_users["users"].append(
-        dict({"id": uid, "name": name, 'isAdmin': isAdmin, 'groupId': groupId}))
-    users = json.dumps(dict_users, indent=4)
+    users.append(dict({"uid": uid, "name": name, "isAdmin": isAdmin, "groupId": groupId}))
 
 
 def __get_random_string(length):
