@@ -30,15 +30,15 @@ def respond():
     # Telegram understands UTF-8, so encode text for unicode compatibility
     text = update.message.text.encode('utf-8').decode()
     # Welcome message
-        if text == "/start":
-            # print the welcoming message
-            bot_welcome = """
-            Ho! Ho! Ho!
-            Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du teilnehmen möchtest dann sende /join!
-            """
-            # send the welcoming message
-            bot.sendMessage(chat_id=chat_id, text=bot_welcome,
-                            reply_to_message_id=msg_id)
+    if text == "/start":
+        # print the welcoming message
+        bot_welcome = """
+        Ho! Ho! Ho!
+        Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du teilnehmen möchtest dann sende /join!
+        """
+        # send the welcoming message
+        bot.sendMessage(chat_id=chat_id, text=bot_welcome,
+                        reply_to_message_id=msg_id)
 
     else:
         try:
