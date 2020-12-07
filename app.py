@@ -28,8 +28,7 @@ def respond():
     __write_log("chat_id: " + str(chat_id) + " msg_id: " + str(msg_id))
 
     # Telegram understands UTF-8, so encode text for unicode compatibility
-    if update.message:
-        text = update.message.text.encode('utf-8').decode()
+    text = update.message.text.encode('utf-8').decode()
     # Welcome message
         if text == "/start":
             # print the welcoming message
