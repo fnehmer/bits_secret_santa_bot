@@ -45,6 +45,10 @@ def respond():
 
 # JOIN GROUP
         elif text.startswith("/join"):
+            if update.message.chat.type != "private":
+                bot.sendMessage(chat_id=chat_id, text="Bitte sende mir privat, dass du joinen willst! (@BitsSecretSantaBot)", reply_to_message_id=msg_id)
+                return "ok"
+
             gc = text.strip()[6:]
             if len(gc) < 1:
                 bot.sendMessage(chat_id=chat_id, text="Bitte vergiss nicht den Gruppencode beim /join <Gruppencode> Kommando!", reply_to_message_id=msg_id)
