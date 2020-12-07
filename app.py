@@ -49,7 +49,7 @@ def respond():
     elif text.startswith("/join"):
         if update.message.chat.type == "private":
             gc = text.strip()[6:]
-            __add_user(update.effective_user.first_name, False, gc)
+            __add_user(update.effective_user.id, update.effective_user.first_name, False, gc)
             msg = "Willkommen in der Gruppe!"
             bot.sendMessage(chat_id=chat_id, text=msg)
         else:
@@ -95,11 +95,11 @@ def __write_log(msg):
     file.close()
 
 
-def __add_user(name, isAdmin, groupId):
+def __add_user(uid, name, isAdmin, groupId):
     global users
     dict_users = json.loads(users)
     dict_users["users"].append(
-        dict({"name": name, 'isAdmin': isAdmin, 'groupId': groupId}))
+        dict({"id": uid, "name": name, 'isAdmin': isAdmin, 'groupId': groupId}))
     users = json.dumps(dict_users, indent=4)
 
 
