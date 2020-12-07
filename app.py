@@ -69,6 +69,9 @@ def respond():
                 if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
+            if shuffle_users < 1
+                return 'ok'
+            
             user_relations = []
             d20_random = len(shuffle_users)
 
