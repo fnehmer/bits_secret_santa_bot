@@ -15,7 +15,7 @@ global TOKEN
 global users
 group_codes = []
 TOKEN = bot_token
-# bot = telegram.Bot(token=TOKEN)
+bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
 
 
