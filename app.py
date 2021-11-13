@@ -12,10 +12,10 @@ import json
 
 global bot
 global TOKEN
-global users
+users = []
 group_codes = []
 TOKEN = bot_token
-bot = telegram.Bot(token=TOKEN)
+# bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
 
 
@@ -32,8 +32,11 @@ def import_users():
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    new_users = users
-    return Response(json.dumps({"users": random.sample(new_users, len(new_users))}), mimetype='application/json')
+    try:
+        new_users = users
+        return Response(json.dumps({"users": random.sample(new_users, len(new_users))}), mimetype='application/json')
+    except:
+        return "", 404
 
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
