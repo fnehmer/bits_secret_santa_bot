@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, Response, request
 import telegram
 from telebot.credentials import bot_token, bot_user_name, URL
 from datetime import datetime
@@ -6,15 +6,34 @@ import os
 import string
 import random
 import time
+import random
+import json
 
 
 global bot
 global TOKEN
-users = []
+global users
 group_codes = []
 TOKEN = bot_token
-bot = telegram.Bot(token=TOKEN)
+# bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
+
+
+@app.route('/users', methods=['POST'])
+def import_users():
+    users_json = request.get_json()
+    if "users" in users_json:
+        global users
+        users = users_json["users"]
+        return "Ok", 200
+    else:
+        return "key 'users' not found", 400
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    new_users = users
+    return Response(json.dumps({"users": random.sample(new_users, len(new_users))}), mimetype='application/json')
 
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
@@ -86,7 +105,9 @@ def respond():
                 bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(groupId) + " gefunden.", reply_to_message_id=msg_id)
                 return "ok"  
 
-            for user in users:
+            rand_users = random.shuffle(users)
+
+            for user in rand_users:
                 if user["groupId"] == groupId:
                     shuffle_users.append(user)
             
