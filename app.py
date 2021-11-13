@@ -29,12 +29,29 @@ def import_users():
     else:
         return "key 'users' not found", 400
 
+@app.route('/groups', methods=['POST'])
+def import_groups():
+    group_json = request.get_json()
+    if "groups" in group_json:
+        global groups
+        groups = group_json["groups"]
+        return "Ok", 200
+    else:
+        return "key 'groups' not found", 400
+
 
 @app.route('/users', methods=['GET'])
 def get_users():
     try:
         new_users = users
         return Response(json.dumps({"users": random.sample(new_users, len(new_users))}), mimetype='application/json')
+    except:
+        return "", 404
+
+@app.route('/groups', methods=['GET'])
+def get_groups():
+    try:
+        return Response(json.dumps({"groups": groups}), mimetype='application/json')
     except:
         return "", 404
 
