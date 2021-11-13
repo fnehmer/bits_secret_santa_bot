@@ -33,8 +33,8 @@ def import_users():
 def import_groups():
     group_json = request.get_json()
     if "groups" in group_json:
-        global groups
-        groups = group_json["groups"]
+        global group_codes
+        group_codes = group_json["groups"]
         return "Ok", 200
     else:
         return "key 'groups' not found", 400
@@ -51,7 +51,7 @@ def get_users():
 @app.route('/groups', methods=['GET'])
 def get_groups():
     try:
-        return Response(json.dumps({"groups": groups}), mimetype='application/json')
+        return Response(json.dumps({"groups": group_codes}), mimetype='application/json')
     except:
         return "", 404
 
