@@ -125,7 +125,7 @@ def respond():
                 bot.sendMessage(chat_id=chat_id, text="Ich habe keine Gruppe mit dem Code " + str(groupId) + " gefunden.", reply_to_message_id=msg_id)
                 return "ok"  
 
-            rand_users = random.shuffle(users)
+            rand_users = random.sample(users, len(users))
 
             for user in rand_users:
                 if user["groupId"] == groupId:
