@@ -147,6 +147,22 @@ def respond():
 
             __write_log(str(user_relations))
 
+            # VALIDITY CHECK
+            val_list_0 = []
+            val_list_1 = []
+            
+            for p in user_relations:
+                val_list_0.append(str(p[0]['uid']))
+                val_list_1.append(str(p[1]['uid']))
+
+            if not( len(val_list_0) == len(set(val_list_0)) and len(val_list_1) == len(set(val_list_1)) and len(val_list_0) == len(val_list_1) ):
+                try:
+                    bot.sendMessage(chat_id=chat_id, text="Bei der Auslosung ist etwas schiefgelaufen.")
+                    return 'not ok'
+                except telegram.TelegramError:
+                    return 'not ok'
+                    
+            # SEND OUT MESSAGES
             for pair in user_relations:
                 time.sleep(0.5)
                 try:
