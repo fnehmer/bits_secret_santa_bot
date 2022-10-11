@@ -14,7 +14,7 @@ global bot
 global TOKEN
 users = []
 group_codes = []
-TOKEN = os.environ.get('BITS_SECRET_SANTA_TOKEN')
+TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
 
@@ -70,6 +70,7 @@ def respond():
 
 # WELCOME MESSAGE
         if text == "/start":
+            __write_log("start")
             bot_welcome = "Ho! Ho! Ho!" + "\n" + "Willkommen beim diesjärigen B!TS Secret Santa Event! Wenn du eine neue Ziehung beginnen willst dann sende /init !"
             bot.sendMessage(chat_id=chat_id, text=bot_welcome,reply_to_message_id=msg_id)
 
