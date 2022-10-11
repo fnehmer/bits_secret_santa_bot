@@ -14,7 +14,7 @@ global bot
 global TOKEN
 users = []
 group_codes = []
-TOKEN = bot_token
+TOKEN = os.environ.get('BITS_SECRET_SANTA_TOKEN')
 bot = telegram.Bot(token=TOKEN)
 app = Flask(__name__)
 
